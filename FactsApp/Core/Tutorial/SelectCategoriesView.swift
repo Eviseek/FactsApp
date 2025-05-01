@@ -8,8 +8,16 @@
 import SwiftUI
 
 struct SelectCategoriesView: View {
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Select your categories.")
+            Button {
+                // TODO: save the categories?
+            } label: {
+                Text("Click to continue")
+            }
+        }
     }
 }
 

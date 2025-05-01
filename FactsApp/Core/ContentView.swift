@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if hasSeenTutorial {
+            FactListView()
+        } else {
+            WelcomeView(hasSeenTutorial: $hasSeenTutorial)
         }
-        .padding()
     }
 }
 

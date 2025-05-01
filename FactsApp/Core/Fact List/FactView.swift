@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FactView: View {
     
-    var fact: Fact
+    var fact: FirebaseFact
     
     var body: some View {
         VStack {
@@ -41,5 +41,5 @@ struct FactView: View {
 
 
 #Preview {
-    FactView(fact: Fact.sampleList[0])
+    FactView(fact: FirebaseFact.sampleList[0])
 }

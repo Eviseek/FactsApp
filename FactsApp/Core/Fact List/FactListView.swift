@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FactListView: View {
     
-    var facts = Fact.sampleList
+    var facts = FirebaseFact.sampleList
     
     var body: some View {
         ZStack {
