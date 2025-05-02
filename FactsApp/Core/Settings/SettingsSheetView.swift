@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsSheetView: View {
     
+    @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -23,68 +24,89 @@ struct SettingsSheetView: View {
                     .padding()
                     Spacer()
                 }
-
+                
                 // Title
                 HStack {
-                    Text("Facts")
+                    Text("Brno Facts")
                         .font(.largeTitle).bold()
                         .padding(.horizontal)
                     Spacer()
                 }
                 .padding(.bottom, 20)
-
+                
                 // Section: Settings
                 VStack(alignment: .leading, spacing: 8) {
                     Text("SETTINGS")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
-
-                    VStack(spacing: 1) {
-                        NavigationLink {
-                            EmailEntryView()
-                        }
-                        label: {
-                            HStack {
-                                Image(systemName: "person.crop.circle")
-                                Text("Sign Up")
-                                Spacer()
-                            }
-                            .padding()
-                        }
-                        .background(Color.white)
-                        
-                        
-                        // TODO: show only if logged
-                        Button(action: {}) {
-                            HStack {
-                                Image(systemName: "heart")
-                                Text("Favorites")
-                                Spacer()
-                            }
-                            .padding()
-                        }
-                        .background(Color.white)
+                    
+                    if viewModel.currentUser == nil {
+                        SettingsItem(icon: "person", label: "Sign up", destination: RegistrationView())
+                        SettingsItem(icon: "person", label: "Log in", destination: LoginView())
+                    } else {
+                        LoggedUserItem()
                     }
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-                }
-
-                Spacer()
-
-                // TODO: show only if logged
-                Button(action: {}) {
-                    Text("Log Out")
-                        .foregroundColor(.red)
+                    
+                    SettingsItem(icon: "heart", label: "Favorites", destination: LoginView())
+                    
+                    Spacer()
+                    
+                    // show log out only if user is logged in
+                    if viewModel.currentUser != nil {
+                        Button {
+                            Task {
+                                AuthService.shared.signOut()
+                            }
+                        } label: {
+                            Text("Log Out")
+                                .foregroundColor(.red)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        }
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
                         .padding()
-                        .frame(maxWidth: .infinity)
+                    }
                 }
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
+                .background(Color(.systemGroupedBackground))
+            }
+        }
+    }
+}
+    
+struct SettingsItem<Destination: View>: View {
+    
+    var icon: String
+    var label: String
+    var destination: Destination
+    
+    var body: some View {
+        VStack(spacing: 1) {
+            // TODO: show only if logged
+            NavigationLink {
+                destination
+            } label: {
+                HStack {
+                    Image(systemName: icon)
+                    Text(label)
+                    Spacer()
+                }
                 .padding()
             }
-            .background(Color(.systemGroupedBackground))
+            .background(Color.white)
+        }
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+        .padding(.horizontal)
+    }
+}
+
+struct LoggedUserItem: View {
+    
+    var body: some View {
+        VStack(spacing: 1) {
+            Text("You are logged")
         }
     }
 }

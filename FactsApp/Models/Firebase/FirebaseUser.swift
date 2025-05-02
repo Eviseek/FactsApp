@@ -10,8 +10,7 @@ import FirebaseFirestore
 
 struct FirebaseUser: Codable, Identifiable, Hashable {
     @DocumentID var uid: String?
-    var name: String
-    var imageUrl: String?
+    var email: String
     var favoriteFacts: [String] //pole se facts ids
     var favoriteCategories: [String] = [String]() //empty = any
     

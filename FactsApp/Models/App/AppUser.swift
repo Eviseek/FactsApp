@@ -9,8 +9,7 @@ import Foundation
 
 struct AppUser {
     var id: String
-    var name: String
-    var imageUrl: String?
+    var email: String
     var favoriteFacts: [AppFact]
     var favoriteCategories: [FactCategory] = [FactCategory]()
 }

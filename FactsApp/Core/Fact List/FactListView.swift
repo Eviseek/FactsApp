@@ -9,13 +9,14 @@ import SwiftUI
 
 struct FactListView: View {
     
-    var facts = FirebaseFact.sampleList
+    @EnvironmentObject var appData: AppData
+    @ObservedObject private var viewModel = FactListViewModel()
     
     var body: some View {
         ZStack {
             ScrollView(.horizontal) {
                 LazyHStack {
-                    ForEach(facts, id:\.self) { fact in
+                    ForEach(appData.filteredFacts, id:\.self) { fact in
                         FactView(fact: fact)
                             .background(.red)
                             .frame(width: UIScreen.main.bounds.width)

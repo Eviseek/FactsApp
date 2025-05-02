@@ -10,6 +10,7 @@ import SwiftUI
 struct FloatingButtonsView: View {
     
     @State private var openSettingsSheet = false
+    @State private var openAuthSheet = false
     
     var body: some View {
         VStack {

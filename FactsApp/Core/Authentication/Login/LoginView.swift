@@ -1,5 +1,5 @@
 //
-//  RegisterPasswordView.swift
+//  LoginPasswordView.swift
 //  FactsApp
 //
 //  Created by Eva Chlpikova on 01.05.2025.
@@ -7,13 +7,22 @@
 
 import SwiftUI
 
-struct RegisterPasswordView: View {
+struct LoginView: View {
     
-    @State private var password = ""
+    @ObservedObject private var viewModel = LoginViewModel()
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
-            SecureField("Enter your password", text: $password)
+            TextField("Enter your email", text: $viewModel.email)
+                .font(.subheadline)
+                .padding(12)
+                .background(Color(.systemGray6))
+                .clipShape(.rect(cornerRadius: 10))
+                .padding(.horizontal, 24)
+                .keyboardType(.emailAddress)
+                .autocapitalization(.none)        
+            SecureField("Enter your password", text: $viewModel.password)
                 .font(.subheadline)
                 .padding(12)
                 .background(Color(.systemGray6))
@@ -21,7 +30,10 @@ struct RegisterPasswordView: View {
                 .padding(.horizontal, 24)
             
             Button {
-                // register with fb
+                Task {
+                    await viewModel.login()
+                    dismiss()
+                }
             } label: {
                 Text("Continue")
                     .font(.subheadline)
@@ -37,5 +49,5 @@ struct RegisterPasswordView: View {
 }
 
 #Preview {
-    RegisterPasswordView()
+    LoginView()
 }
