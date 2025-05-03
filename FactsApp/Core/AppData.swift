@@ -68,7 +68,7 @@ class AppData: ObservableObject {
     
     var filteredFacts: [AppFact] {
         if selectedCategoryIDs.isEmpty { return facts } // return all facts if no categories were selected
-        return facts.filter { selectedCategoryIDs.contains($0.category.id) }
+        return (facts.filter { selectedCategoryIDs.contains($0.category.id) }).shuffled()
     }
     
 

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SettingsSheetView: View {
     
-    @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -41,33 +40,9 @@ struct SettingsSheetView: View {
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
                     
-                    if viewModel.currentUser == nil {
-                        SettingsItem(icon: "person", label: "Sign up", destination: RegistrationView())
-                        SettingsItem(icon: "person", label: "Log in", destination: LoginView())
-                    } else {
-                        LoggedUserItem()
-                    }
-                    
                     SettingsItem(icon: "heart", label: "Favorites", destination: FavoriteFactsView())
                     
                     Spacer()
-                    
-                    // show log out only if user is logged in
-                    if viewModel.currentUser != nil {
-                        Button {
-                            Task {
-                                AuthService.shared.signOut()
-                            }
-                        } label: {
-                            Text("Log Out")
-                                .foregroundColor(.red)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                        }
-                        .background(Color(.systemGray6))
-                        .cornerRadius(12)
-                        .padding()
-                    }
                 }
                 .background(Color(.systemGroupedBackground))
             }
