@@ -12,9 +12,9 @@ struct WelcomeView: View {
     @EnvironmentObject var appData: AppData
     
     @State private var hasFinished = false
-    @State private var selected: [FactCategory] = []
+    @State private var selected: Set<String> = []
     
-    var onFinishTutorial: (_ selectedCategoryIDs: [FactCategory]) -> Void
+    var onFinishTutorial: (_ selectedCategoryIDs: Set<String>) -> Void
     
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial: Bool = false
     
@@ -24,10 +24,10 @@ struct WelcomeView: View {
             Text("Select your categories.")
             ForEach(appData.categories) { category in
                 Button(category.title) {
-                    if selected.contains(category) {
-                        selected.remove(category)
+                    if selected.contains(category.id) {
+                        selected.remove(category.id)
                     } else {
-                        selected.insert(category)
+                        selected.insert(category.id)
                     }
                 }
             }

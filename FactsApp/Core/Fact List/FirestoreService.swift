@@ -50,7 +50,7 @@ class FirestoreService {
                 }
             }
             
-            print("My app facts are \(appFacts)")
+           // print("My app facts are \(appFacts)")
             return appFacts
             
         } catch {

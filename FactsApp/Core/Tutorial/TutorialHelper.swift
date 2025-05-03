@@ -12,7 +12,7 @@ class TutorialHelper {
     @MainActor
     func fetchAndSetFactsForFirstTime(selectedCategoryIDs: Set<String>, appData: AppData) async {
         appData.setSelectedCategoryIDs(selectedCategoryIDs)
-        let facts = await FactsFetcher().fetchFacts(with: appData.selectedCategoryIDs)
+        let facts = await FactsFetcher().fetchFacts(with: appData.categories)
         appData.setFacts(facts)
     }
 

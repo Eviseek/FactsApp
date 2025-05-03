@@ -48,7 +48,7 @@ struct SettingsSheetView: View {
                         LoggedUserItem()
                     }
                     
-                    SettingsItem(icon: "heart", label: "Favorites", destination: LoginView())
+                    SettingsItem(icon: "heart", label: "Favorites", destination: FavoriteFactsView())
                     
                     Spacer()
                     
