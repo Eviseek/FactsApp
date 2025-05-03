@@ -31,6 +31,7 @@ struct FactsAppApp: App {
         WindowGroup {
             if hasSeenTutorial {
                 FactListView()
+                    .tint(Color(.activeRed))
                     .environmentObject(appData)
                     .task {
                         let factsHelper = FactsHelper(appData: appData)
@@ -38,12 +39,13 @@ struct FactsAppApp: App {
                     }
             } else {
                 WelcomeView(
-                    onFinishTutorial: { selectedCategoryIDs in
+                    onFinishTutorial: {
                         Task {
-                            await tutorialHelper.fetchAndSetFactsForFirstTime(selectedCategoryIDs: selectedCategoryIDs, appData: appData)
+                            await tutorialHelper.fetchAndSetFactsForFirstTime(appData: appData)
                         }
                     }
                 )
+                .tint(Color(.activeRed))
                 .environmentObject(appData)
                 .task {
                     await tutorialHelper.preloadCategories(into: appData)

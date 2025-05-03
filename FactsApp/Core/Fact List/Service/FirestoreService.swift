@@ -39,7 +39,7 @@ class FirestoreService {
     
     func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact]? {
         do {
-            let snapshot = try await Firestore.firestore().collection("facts").getDocuments()
+            let snapshot = try await Firestore.firestore().collection("facts").getDocuments(source: .server)
             let fbFacts = snapshot.documents.compactMap { try? $0.data(as: FirebaseFact.self) }
             
             var appFacts: [AppFact] = []
@@ -49,25 +49,23 @@ class FirestoreService {
                     appFacts.append(AppFact(id: fbFact.id, category: category, text: fbFact.text, sourceUrl: fbFact.sourceUrl))
                 }
             }
-            
-           // print("My app facts are \(appFacts)")
             return appFacts
             
         } catch {
             print("ERROR fetchingFacts \(error.localizedDescription)")
-            return nil
+            throw error
         }
     }
     
     
     func fetchFactCategories() async throws -> [FactCategory]? {
         do {
-            let snapshot = try await Firestore.firestore().collection("categories").getDocuments()
+            let snapshot = try await Firestore.firestore().collection("categories").getDocuments(source: .server)
             let facts = snapshot.documents.compactMap { try? $0.data(as: FactCategory.self) }
             return facts
         } catch {
             print("ERROR fetchingCategories \(error.localizedDescription)")
-            return nil
+            throw error
         }
     }
     

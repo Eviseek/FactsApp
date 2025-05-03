@@ -20,32 +20,25 @@ struct FactView: View {
                 .font(.title)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
+                .foregroundStyle(.darkBrown)
             
                 .padding(.bottom, 20)
                 .padding(.horizontal, 20)
             HStack(spacing: 40) {
                 ShareLink(item: fact.text) {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.title2)
+                    ReusableImageView(systemName: "square.and.arrow.up", size: .medium)
                 }
                 Button {
                     if let url = URL(string: fact.sourceUrl) {
                         openURL(url)
                     }
                 } label: {
-                    Image(systemName: "info.circle")
-                        .font(.title2)
+                    ReusableImageView(systemName: "info.circle", size: .medium)
                 }
                 Button {
                     appData.toggleFavorite(with: fact.id)
                 } label: {
-                    if appData.isFavorite(fact.id) {
-                        Image(systemName: "heart.fill")
-                            .font(.title2)
-                    } else {
-                        Image(systemName: "heart")
-                            .font(.title2)
-                    }
+                    ReusableImageView(systemName: (appData.isFavorite(fact.id) ? "heart.fill" : "heart"), size: .medium)
                 }
             }
         }

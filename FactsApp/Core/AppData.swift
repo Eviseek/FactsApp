@@ -15,6 +15,10 @@ class AppData: ObservableObject {
     @Published var selectedCategoryIDs: Set<String> = []
     @Published var favoriteFactIDs: Set<String> = []
     
+    @Published var isfetchingCategories = true
+    
+    @Published var showError: Bool = false
+    
     private(set) var hasLoaded = false
     
     private let selectedCategoryKey = "selectedCategoryIDs"
@@ -66,9 +70,28 @@ class AppData: ObservableObject {
     
     // MARK: Facts and categories
     
+    
+    func toggleCategory(with categoryId: String) {
+        if selectedCategoryIDs.contains(categoryId) {
+            selectedCategoryIDs.remove(categoryId)
+        } else {
+            selectedCategoryIDs.insert(categoryId)
+        }
+        saveSelectedCategoryIDs()
+    }
+    
+    func isSelected(_ categoryId: String) -> Bool {
+        if selectedCategoryIDs.contains(categoryId) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    
     var filteredFacts: [AppFact] {
         if selectedCategoryIDs.isEmpty { return facts } // return all facts if no categories were selected
-        return (facts.filter { selectedCategoryIDs.contains($0.category.id) }).shuffled()
+        return facts.filter { selectedCategoryIDs.contains($0.category.id) }
     }
     
 
@@ -84,10 +107,10 @@ class AppData: ObservableObject {
         saveCategories()
     }
     
-    func setSelectedCategoryIDs(_ ids: Set<String>) {
-        self.selectedCategoryIDs = ids
-        saveSelectedCategoryIDs()
-    }
+//    func setSelectedCategoryIDs(_ ids: Set<String>) {
+//        self.selectedCategoryIDs = ids
+//        saveSelectedCategoryIDs()
+//    }
     
     // MARK: UserDefaults
     

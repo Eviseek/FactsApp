@@ -19,11 +19,13 @@ class FactsHelper {
     }
 
     func loadCategoriesAndFetchFacts() async {
-        if appData.categories.isEmpty {
-            appData.loadCategories()
+        if appData.categories.isEmpty { appData.loadCategories() }
+        do {
+            let facts = try await fetcher.fetchFacts(with: appData.categories)
+            appData.setFacts(facts)
+            print("loaded categories and loaded data \(facts)")
+        } catch {
+            appData.showError = true
         }
-        let facts = await fetcher.fetchFacts(with: appData.categories)
-        appData.setFacts(facts)
-        print("loaded categories and loaded data \(facts)")
     }
 }

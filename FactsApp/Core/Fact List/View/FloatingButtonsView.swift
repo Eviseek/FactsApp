@@ -16,13 +16,10 @@ struct FloatingButtonsView: View {
         VStack {
             HStack {
                 Spacer()
-                Button(action: {
+                Button {
                     openSettingsSheet = true
-                }) {
-                    Image(systemName: "ellipsis")
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .clipShape(Circle())
+                } label: {
+                    ReusableImageView(systemName: "ellipsis", size: .medium)
                 }
                 .sheet(isPresented: $openSettingsSheet, content: {
                     SettingsSheetView()

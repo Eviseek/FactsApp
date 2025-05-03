@@ -10,7 +10,6 @@ import SwiftUI
 struct FactListView: View {
     
     @EnvironmentObject var appData: AppData
-    @ObservedObject private var viewModel = FactListViewModel()
     
     var body: some View {
         ZStack {
@@ -18,7 +17,6 @@ struct FactListView: View {
                 LazyHStack {
                     ForEach(appData.filteredFacts, id:\.self) { fact in
                         FactView(fact: fact)
-                            .background(.red)
                             .frame(width: UIScreen.main.bounds.width)
                     }
                 }
@@ -26,9 +24,9 @@ struct FactListView: View {
             }
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned)
-            
             FloatingButtonsView()
         }
+        .background(Color(.backgroundCream))
     }
 }
 

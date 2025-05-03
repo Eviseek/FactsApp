@@ -14,38 +14,29 @@ struct SettingsSheetView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Header
                 HStack {
-                    Button("Done") {
+                    Spacer()
+                    Button("Zavřít") {
                         dismiss()
                     }
                     .font(.body)
                     .padding()
-                    Spacer()
                 }
-                
-                // Title
                 HStack {
-                    Text("Brno Facts")
-                        .font(.largeTitle).bold()
+                    Text("Menu")
+                        .font(.largeTitle)
+                        .bold()
                         .padding(.horizontal)
+                        .foregroundStyle(.darkBrown)
                     Spacer()
                 }
                 .padding(.bottom, 20)
+                    
+                SettingsItem(icon: "heart", label: "Oblíbené fakty", destination: FavoriteFactsView())
                 
-                // Section: Settings
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("SETTINGS")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
-                    
-                    SettingsItem(icon: "heart", label: "Favorites", destination: FavoriteFactsView())
-                    
-                    Spacer()
-                }
-                .background(Color(.systemGroupedBackground))
+                Spacer()
             }
+            .background(Color(.sheetLightCream))
         }
     }
 }
@@ -58,31 +49,24 @@ struct SettingsItem<Destination: View>: View {
     
     var body: some View {
         VStack(spacing: 1) {
-            // TODO: show only if logged
             NavigationLink {
                 destination
             } label: {
                 HStack {
-                    Image(systemName: icon)
+                    ReusableImageView(systemName: "heart.fill", size: .small)
+                        .tint(.darkBrown)
                     Text(label)
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(.darkBrown)
                     Spacer()
                 }
-                .padding()
+                .padding(.vertical, 5)
+                .background(Color(.lightBrown))
+                .cornerRadius(12)
             }
-            .background(Color.white)
         }
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
-        .padding(.horizontal)
-    }
-}
-
-struct LoggedUserItem: View {
-    
-    var body: some View {
-        VStack(spacing: 1) {
-            Text("You are logged")
-        }
+        .padding(.horizontal, 15)
     }
 }
 

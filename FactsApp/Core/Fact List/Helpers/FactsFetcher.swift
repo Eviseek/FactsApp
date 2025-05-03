@@ -9,23 +9,23 @@ import Foundation
 
 class FactsFetcher {
     
-    func fetchFacts(with categories: [FactCategory]) async -> [AppFact] { //TODO: re-do
+    func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact] { //TODO: re-do
         do {
             let facts = try await FirestoreService().fetchFacts(with: categories)
             return facts ?? [AppFact]()
         } catch {
             print("ERROR fetchFacts \(error.localizedDescription)")
-            return [AppFact]()
+            throw error
         }
     }
     
-    func fetchCategories() async -> [FactCategory] {
+    func fetchCategories() async throws -> [FactCategory] {
         do {
             let categories = try await FirestoreService().fetchFactCategories()
             return categories ?? [FactCategory]()
         } catch {
             print("ERROR fetchCategories \(error.localizedDescription)")
-            return [FactCategory]()
+            throw error
         }
     }
     
