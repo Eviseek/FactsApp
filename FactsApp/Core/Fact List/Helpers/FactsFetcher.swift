@@ -9,7 +9,11 @@ import Foundation
 
 class FactsFetcher: Fetchable {
     
-    private let firestoreService = FirestoreService()
+    private let firestoreService: FirestoreFetchable
+    
+    init(firestoreService: FirestoreFetchable = FirestoreService()) {
+        self.firestoreService = firestoreService
+    }
     
     func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact] {
         do {

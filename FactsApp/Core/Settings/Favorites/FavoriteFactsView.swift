@@ -31,6 +31,7 @@ struct FavoriteFactsView: View {
                 .scrollIndicators(.hidden)
             }
         }
+        .background(.sheetLightCream)
     }
 }
 

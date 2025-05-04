@@ -15,7 +15,7 @@ final class FactsHelperTests: XCTestCase {
     @MainActor func test_FactsHelper_loadCategoriesAndFetchFacts_shouldSetFacts() async throws {
         let appDataMock = AppDataMock()
         let fetcherMock = FetcherMock()
-        var factsMock: [AppFact] = AppFact.sampleList
+        let factsMock: [AppFact] = AppFact.sampleList
         fetcherMock.factsMock = factsMock
         let factsHelper = FactsHelper(appData: appDataMock, fetcher: fetcherMock)
         
@@ -37,28 +37,33 @@ final class FactsHelperTests: XCTestCase {
             XCTAssertNil(appDataMock.setFactsCalledWithFacts)
             XCTAssertEqual(MockError.mock, error as! MockError)
         }
-        
     }
 
-}
-
-class AppDataMock: AppDataProtocol {
-    private(set) var setFactsCalledWithFacts: [AppFact]? // can be set only inside the mock
-    var categories: [FactsApp.FactCategory] = []
-    
-    func setFacts(_ facts: [FactsApp.AppFact]) {
-        setFactsCalledWithFacts = facts
-    }
 }
 
 enum MockError: Error {
     case mock
 }
 
+class AppDataMock: AppDataProtocol {
+
+    private(set) var setFactsCalledWithFacts: [AppFact]? // can be set only inside the mock
+    private(set) var setCategoriesCalledWithCategories: [FactCategory]?
+    var categories: [FactsApp.FactCategory] = []
+    
+    func setFacts(_ facts: [FactsApp.AppFact]) {
+        setFactsCalledWithFacts = facts
+    }
+    
+    func setCategories(_ categories: [FactsApp.FactCategory]) {
+        setCategoriesCalledWithCategories = categories
+    }
+}
 
 class FetcherMock: Fetchable {
     var errorMock: Error?
     var factsMock: [AppFact] = []
+    var categoriesMock: [FactCategory] = []
     
     func fetchFacts(with categories: [FactsApp.FactCategory]) async throws -> [FactsApp.AppFact] {
         if let errorMock {
@@ -68,6 +73,9 @@ class FetcherMock: Fetchable {
     }
     
     func fetchCategories() async throws -> [FactsApp.FactCategory] {
-        return [FactCategory]()
+        if let errorMock {
+            throw errorMock
+        }
+        return categoriesMock
     }
 }

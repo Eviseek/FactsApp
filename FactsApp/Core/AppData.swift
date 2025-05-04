@@ -11,6 +11,7 @@ import Combine
 protocol AppDataProtocol {
     var categories: [FactCategory] { get set }
     func setFacts(_ facts: [AppFact])
+    func setCategories(_ categories: [FactCategory])
 }
 
 class AppData: ObservableObject, AppDataProtocol {

@@ -10,10 +10,14 @@ import Foundation
 @MainActor
 class TutorialHelper {
     
-    private let factsFetcher = FactsFetcher()
+    private let factsFetcher: Fetchable
+    
+    init(fetcher: Fetchable = FactsFetcher()) {
+        self.factsFetcher = fetcher
+    }
 
     @MainActor
-    func preloadCategories(into appData: AppData) async throws {
+    func preloadCategories(into appData: AppDataProtocol) async throws {
         do {
             let categories = try await factsFetcher.fetchCategories()
             appData.setCategories(categories)

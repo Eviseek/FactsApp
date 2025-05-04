@@ -8,7 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
-class FirestoreService {
+protocol FirestoreFetchable {
+    func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact]?
+    func fetchFactCategories() async throws -> [FactCategory]?
+}
+
+class FirestoreService: FirestoreFetchable {
     
     // MARK: Fetch from Firebase
     
