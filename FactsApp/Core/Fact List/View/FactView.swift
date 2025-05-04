@@ -10,8 +10,8 @@ import SwiftUI
 struct FactView: View {
     
     var fact: AppFact
-    @EnvironmentObject var appData: AppData
     
+    @EnvironmentObject var appData: AppData
     @Environment(\.openURL) var openURL
     
     var body: some View {
@@ -21,7 +21,6 @@ struct FactView: View {
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.darkBrown)
-            
                 .padding(.bottom, 20)
                 .padding(.horizontal, 20)
             HStack(spacing: 40) {

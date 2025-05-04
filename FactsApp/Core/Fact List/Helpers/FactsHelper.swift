@@ -10,22 +10,20 @@ import Foundation
 @MainActor
 class FactsHelper {
     
-    let appData: AppData
-    let fetcher: FactsFetcher
+    let appData: AppDataProtocol
+    let fetcher: Fetchable
 
-    init(appData: AppData, fetcher: FactsFetcher = FactsFetcher()) {
+    init(appData: AppDataProtocol, fetcher: Fetchable = FactsFetcher()) {
         self.appData = appData
         self.fetcher = fetcher
     }
 
-    func loadCategoriesAndFetchFacts() async {
-        if appData.categories.isEmpty { appData.loadCategories() }
+    func loadCategoriesAndFetchFacts() async throws {
         do {
             let facts = try await fetcher.fetchFacts(with: appData.categories)
             appData.setFacts(facts)
-            print("loaded categories and loaded data \(facts)")
         } catch {
-            appData.showError = true
+            throw error
         }
     }
 }

@@ -9,35 +9,40 @@ import SwiftUI
 
 struct SettingsSheetView: View {
     
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                HStack {
-                    Spacer()
-                    Button("Zavřít") {
-                        dismiss()
-                    }
-                    .font(.body)
-                    .padding()
-                }
-                HStack {
-                    Text("Menu")
-                        .font(.largeTitle)
-                        .bold()
-                        .padding(.horizontal)
-                        .foregroundStyle(.darkBrown)
-                    Spacer()
-                }
-                .padding(.bottom, 20)
-                    
+                SettingsHeaderView()
                 SettingsItem(icon: "heart", label: "Oblíbené fakty", destination: FavoriteFactsView())
-                
                 Spacer()
             }
             .background(Color(.sheetLightCream))
         }
+    }
+}
+
+struct SettingsHeaderView: View {
+    
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            Button("Zavřít") {
+                dismiss()
+            }
+            .font(.body)
+            .padding()
+        }
+        HStack {
+            Text("Menu")
+                .font(.largeTitle)
+                .bold()
+                .padding(.horizontal)
+                .foregroundStyle(.darkBrown)
+            Spacer()
+        }
+        .padding(.bottom, 20)
     }
 }
     

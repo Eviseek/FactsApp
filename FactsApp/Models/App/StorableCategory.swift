@@ -7,7 +7,7 @@
 
 import Foundation
 
-// Category cannot be saved with the Firebase's DocumentID, so here's a storable model
+// Category cannot be saved with the Firebase's @DocumentID, so here's a userDefault's storable model
 struct StorableCategory: Codable, Identifiable {
     let id: String
     let title: String

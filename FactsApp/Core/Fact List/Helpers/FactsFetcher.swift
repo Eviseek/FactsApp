@@ -7,11 +7,13 @@
 
 import Foundation
 
-class FactsFetcher {
+class FactsFetcher: Fetchable {
     
-    func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact] { //TODO: re-do
+    private let firestoreService = FirestoreService()
+    
+    func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact] {
         do {
-            let facts = try await FirestoreService().fetchFacts(with: categories)
+            let facts = try await firestoreService.fetchFacts(with: categories)
             return facts ?? [AppFact]()
         } catch {
             print("ERROR fetchFacts \(error.localizedDescription)")
@@ -21,7 +23,7 @@ class FactsFetcher {
     
     func fetchCategories() async throws -> [FactCategory] {
         do {
-            let categories = try await FirestoreService().fetchFactCategories()
+            let categories = try await firestoreService.fetchFactCategories()
             return categories ?? [FactCategory]()
         } catch {
             print("ERROR fetchCategories \(error.localizedDescription)")

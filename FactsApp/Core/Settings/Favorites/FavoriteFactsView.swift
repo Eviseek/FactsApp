@@ -58,12 +58,16 @@ struct FavoriteFactView: View {
                 Text(fact.text)
                     .font(.title3)
                     .foregroundStyle(.darkBrown)
+                    .padding(.leading, 10)
+                    .padding(.vertical, 10)
+                    .frame(width: UIScreen.main.bounds.width - 100, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                Spacer()
                 ShareLink(item: fact.text) {
                     ReusableImageView(systemName: "square.and.arrow.up", size: .small)
+                        .padding(.trailing, 5)
                 }
             }
-            .padding(.vertical, 10)
-            .padding(.leading, 10)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 5)

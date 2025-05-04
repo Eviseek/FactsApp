@@ -7,39 +7,14 @@
 
 import Foundation
 import FirebaseFirestore
-import Combine
 
 class FirestoreService {
     
-    func uploadCategories() async throws {
-        let categories = FactCategory.sampleList
-        for category in categories {
-            do {
-                let encodedCategory = try Firestore.Encoder().encode(category)
-                try await Firestore.firestore().collection("categories").document(category.id).setData(encodedCategory)
-            } catch {
-                print("ERROR saving categories \(error.localizedDescription)")
-            }
-        }
-
-    }
-    
-    func uploadFacts() async throws {
-        let facts = FirebaseFact.sampleList
-        for fact in facts {
-            do {
-                let encodedFact = try Firestore.Encoder().encode(fact)
-                try await Firestore.firestore().collection("facts").document(fact.id).setData(encodedFact)
-            } catch {
-                print("ERROR saving facts \(error.localizedDescription)")
-            }
-        }
-
-    }
+    // MARK: Fetch from Firebase
     
     func fetchFacts(with categories: [FactCategory]) async throws -> [AppFact]? {
         do {
-            let snapshot = try await Firestore.firestore().collection("facts").getDocuments(source: .server)
+            let snapshot = try await Firestore.firestore().collection("facts").getDocuments(source: .server) // source: .server is used to avoid caching
             let fbFacts = snapshot.documents.compactMap { try? $0.data(as: FirebaseFact.self) }
             
             var appFacts: [AppFact] = []
@@ -57,10 +32,9 @@ class FirestoreService {
         }
     }
     
-    
     func fetchFactCategories() async throws -> [FactCategory]? {
         do {
-            let snapshot = try await Firestore.firestore().collection("categories").getDocuments(source: .server)
+            let snapshot = try await Firestore.firestore().collection("categories").getDocuments(source: .server) // source: .server is used to avoid caching
             let facts = snapshot.documents.compactMap { try? $0.data(as: FactCategory.self) }
             return facts
         } catch {
@@ -69,5 +43,35 @@ class FirestoreService {
         }
     }
     
+    // MARK: Upload to Firebase
+    // these functions are not used anywhere in the app; they were used for initial data upload; left here just for an example
+    
+    func uploadCategories() async throws {
+        let categories = FactCategory.sampleList
+        for category in categories {
+            do {
+                let encodedCategory = try Firestore.Encoder().encode(category)
+                try await Firestore.firestore().collection("categories").document(category.id).setData(encodedCategory)
+            } catch {
+                print("ERROR saving categories \(error.localizedDescription)")
+                throw error
+            }
+        }
+
+    }
+    
+    func uploadFacts() async throws {
+        let facts = FirebaseFact.sampleList
+        for fact in facts {
+            do {
+                let encodedFact = try Firestore.Encoder().encode(fact)
+                try await Firestore.firestore().collection("facts").document(fact.id).setData(encodedFact)
+            } catch {
+                print("ERROR saving facts \(error.localizedDescription)")
+                throw error
+            }
+        }
+
+    }
     
 }

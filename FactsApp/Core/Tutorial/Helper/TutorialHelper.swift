@@ -7,31 +7,19 @@
 
 import Foundation
 
+@MainActor
 class TutorialHelper {
     
     private let factsFetcher = FactsFetcher()
-    
-    @MainActor
-    func fetchAndSetFactsForFirstTime(appData: AppData) async {
-        do {
-            let facts = try await factsFetcher.fetchFacts(with: appData.categories)
-            appData.setFacts(facts)
-        } catch {
-            print("ERROR fetchAndSetFactsForFirstTime \(error.localizedDescription)")
-            appData.showError = true
-        }
-    }
 
     @MainActor
-    func preloadCategories(into appData: AppData) async {
-        appData.isfetchingCategories = true
+    func preloadCategories(into appData: AppData) async throws {
         do {
             let categories = try await factsFetcher.fetchCategories()
             appData.setCategories(categories)
         } catch {
             print("ERROR preloadCategories \(error.localizedDescription)")
-            appData.showError = true
+            throw error
         }
-        appData.isfetchingCategories = false
     }
 }

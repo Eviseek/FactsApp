@@ -8,19 +8,18 @@
 import Foundation
 import Combine
 
-class AppData: ObservableObject {
+protocol AppDataProtocol {
+    var categories: [FactCategory] { get set }
+    func setFacts(_ facts: [AppFact])
+}
+
+class AppData: ObservableObject, AppDataProtocol {
     
     @Published var facts: [AppFact] = []
     @Published var categories: [FactCategory] = []
     @Published var selectedCategoryIDs: Set<String> = []
     @Published var favoriteFactIDs: Set<String> = []
-    
-    @Published var isfetchingCategories = true
-    
-    @Published var showError: Bool = false
-    
-    private(set) var hasLoaded = false
-    
+        
     private let selectedCategoryKey = "selectedCategoryIDs"
     private let favoriteFactsKey = "favoriteFactsKey"
     private let categoryKey = "factCategories"
@@ -59,7 +58,6 @@ class AppData: ObservableObject {
     private func saveFavoriteFactIDs() {
         let array = Array(favoriteFactIDs)
         UserDefaults.standard.set(array, forKey: favoriteFactsKey)
-        print("SAVED favoriteFacts id")
     }
 
     private func loadFavoriteFactIDs() {
@@ -68,8 +66,44 @@ class AppData: ObservableObject {
         }
     }
     
-    // MARK: Facts and categories
+    // MARK: Fetched facts
     
+    var filteredFacts: [AppFact] {
+        if selectedCategoryIDs.isEmpty { return facts } // return all facts if no categories were selected
+        return facts.filter { selectedCategoryIDs.contains($0.category.id) }
+    }
+
+    
+    func setFacts(_ facts: [AppFact]) {
+        self.facts = facts
+    }
+    
+    // MARK: All categories
+    
+    func setCategories(_ categories: [FactCategory]) {
+        self.categories = categories
+        saveCategories()
+    }
+    
+    private func saveCategories() {
+        let storable = categories.map { StorableCategory (id: $0.id, title: $0.title) }
+        if let data = try? JSONEncoder().encode(storable) {
+            UserDefaults.standard.set(data, forKey: categoryKey)
+        } else {
+            print("ERROR saveCategories - failed to save categories.")
+        }
+    }
+
+    func loadCategories() {
+        if let data = UserDefaults.standard.data(forKey: categoryKey),
+           let categories = try? JSONDecoder().decode([StorableCategory].self, from: data) {
+            self.categories = categories.map { FactCategory (uid: $0.id, title: $0.title) }
+        } else {
+            print("ERROR loadCategories - failed to load categories.")
+        }
+    }
+    
+    // MARK: Selected categories
     
     func toggleCategory(with categoryId: String) {
         if selectedCategoryIDs.contains(categoryId) {
@@ -80,6 +114,7 @@ class AppData: ObservableObject {
         saveSelectedCategoryIDs()
     }
     
+    // Used in the WelcomeView to track which categories were checked
     func isSelected(_ categoryId: String) -> Bool {
         if selectedCategoryIDs.contains(categoryId) {
             return true
@@ -88,60 +123,14 @@ class AppData: ObservableObject {
         }
     }
     
-    
-    var filteredFacts: [AppFact] {
-        if selectedCategoryIDs.isEmpty { return facts } // return all facts if no categories were selected
-        return facts.filter { selectedCategoryIDs.contains($0.category.id) }
-    }
-    
-
-    
-    func setFacts(_ facts: [AppFact]) {
-        self.facts = facts
-        self.hasLoaded = true
-    }
-    
-    func setCategories(_ categories: [FactCategory]) {
-        self.categories = categories
-        print("categories are \(categories)")
-        saveCategories()
-    }
-    
-//    func setSelectedCategoryIDs(_ ids: Set<String>) {
-//        self.selectedCategoryIDs = ids
-//        saveSelectedCategoryIDs()
-//    }
-    
-    // MARK: UserDefaults
-    
     private func saveSelectedCategoryIDs() {
         let array = Array(selectedCategoryIDs)
         UserDefaults.standard.set(array, forKey: selectedCategoryKey)
-        print("SAVED selectedCategory id")
     }
 
     private func loadSelectedCategoryIDs() {
         if let stored = UserDefaults.standard.array(forKey: selectedCategoryKey) as? [String] {
             selectedCategoryIDs = Set(stored)
-        }
-    }
-    
-    private func saveCategories() {
-        let storable = categories.map { StorableCategory (id: $0.id, title: $0.title) }
-        if let data = try? JSONEncoder().encode(storable) {
-            UserDefaults.standard.set(data, forKey: categoryKey)
-            print("SAVED categories id")
-        } else {
-            print("FAILED could not save categories")
-        }
-    }
-
-    func loadCategories() {
-        if let data = UserDefaults.standard.data(forKey: categoryKey),
-           let categories = try? JSONDecoder().decode([StorableCategory].self, from: data) {
-            self.categories = categories.map { FactCategory (uid: $0.id, title: $0.title) }
-        } else {
-            print("FAILED TO LOAD them")
         }
     }
     

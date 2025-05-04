@@ -46,12 +46,8 @@ struct WelcomeView: View {
             Text("Zvolte si kategorie.")
                 .padding(.bottom, 7)
                 .foregroundStyle(.darkBrown)
-            if appData.isfetchingCategories {
-                ProgressView()
-                    .tint(.darkBrown)
-                    .frame(width: 150)
-            } else {
-                LoadedCategoryView()
+            ForEach(appData.categories) { category in
+                SelectableCategoryItem(category: category)
             }
             Spacer()
             Button {
@@ -63,28 +59,10 @@ struct WelcomeView: View {
             .padding(.bottom, 10)
         }
         .background(Color(.backgroundCream))
-//        .alert("Něco se pokazilo. Prosím zkuste to později.", isPresented: $appData.showError) {
-//            Button("Zavřít.", role: .destructive) {
-//                appData.showError = false
-//                exit(0) // temporary solution, should be handled with try again option; categories are need to fetch facts 
-//            }
-//        }
     }
 }
 
-
-struct LoadedCategoryView: View {
-    
-    @EnvironmentObject var appData: AppData
-    
-    var body: some View {
-        ForEach(appData.categories) { category in
-            SelectedCategoryView(category: category)
-        }
-    }
-}
-
-struct SelectedCategoryView: View {
+struct SelectableCategoryItem: View {
     
     @EnvironmentObject var appData: AppData
     var category: FactCategory
@@ -133,6 +111,6 @@ struct WelcomeButtonView: View {
     
 }
 
-//#Preview {
-//    WelcomeView()
-//}
+#Preview {
+    WelcomeView(onFinishTutorial: {})
+}
